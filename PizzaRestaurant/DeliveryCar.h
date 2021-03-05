@@ -8,10 +8,11 @@
 
 #import <Foundation/Foundation.h>
 #import "Pizza.h"
+#import "DeliveryService.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface DeliveryCar : NSObject
+@interface DeliveryCar : NSObject <DeliveryServiceDelegate>;
 
 - (NSString *)deliverPizza:(Pizza *)pizza;
 

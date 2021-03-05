@@ -10,4 +10,9 @@
 
 @implementation DeliveryCar
 
+- (nonnull NSString *)deliverPizza:(nonnull Pizza *)pizza {
+    NSLog(@"Pizza Delivered.");
+    return pizza.description;
+}
+
 @end

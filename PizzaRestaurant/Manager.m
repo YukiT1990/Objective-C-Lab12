@@ -15,7 +15,7 @@
 }
 
 - (void)kitchenDidMakePizza:(Pizza *)pizza {
-    
+    [_delegate deliverPizza:pizza];
 }
 
 - (BOOL)kitchenShouldUpgradeOrder:(Kitchen *)kitchen {
@@ -23,7 +23,7 @@
 }
 
 - (NSString *)deliverPizza:(Pizza *)pizza {
-    NSString *pizzaDescription = [_delegate deliverPizza:pizza];
+    NSString *pizzaDescription = pizza.description;
     return pizzaDescription;
 }
 

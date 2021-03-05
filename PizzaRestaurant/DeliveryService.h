@@ -12,9 +12,20 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface DeliveryService : NSObject <PizzaManagerDelegate>;
+@protocol DeliveryServiceDelegate <NSObject>
 
 - (NSString *)deliverPizza:(Pizza *)pizza;
+
+@end
+
+@interface DeliveryService : NSObject <PizzaManagerDelegate>;
+
+@property (nonatomic, weak) id<DeliveryServiceDelegate> delegate;
+
+@property NSMutableArray *pizzaRecord;
+
+- (NSString *)deliverPizza:(Pizza *)pizza;
+- (NSMutableArray *)returnPizzaRecord;
 
 @end
 

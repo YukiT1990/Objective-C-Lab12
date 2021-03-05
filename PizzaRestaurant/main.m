@@ -11,21 +11,24 @@
 #import "Pizza.h"
 #import "ManagerHatingAnchovies.h"
 #import "ManagerBeingCheery.h"
+#import "Manager.h"
+#import "DeliveryService.h"
+#import "DeliveryCar.h"
 
 int main(int argc, const char * argv[])
 {
 
     @autoreleasepool {
         
-        NSLog(@"Please pick your pizza size and toppings:");
-        
         Kitchen *restaurantKitchen = [Kitchen new];
-        ManagerHatingAnchovies *Nick;
-        ManagerBeingCheery *Bob;
-        
+        Manager *Jane = [Manager new];
+        DeliveryService *deliveryService = [DeliveryService new];
+        DeliveryCar *deliveryCar = [DeliveryCar new];
         
         while (TRUE) {
             // Loop forever
+            NSLog(@"Please pick your pizza size and toppings: ");
+            NSLog(@"'record' to see pizza record: ");
             
             NSLog(@"> ");
             char str[100];
@@ -40,39 +43,29 @@ int main(int argc, const char * argv[])
             NSArray *commandWords = [inputString componentsSeparatedByString:@" "];
             NSString *keyword = commandWords[0];
             
-            NSLog(@"Who is the manager?");
-            NSLog(@"> ");
-            fgets (str, 100, stdin);
-            NSString *inputStringForManager = [[NSString alloc] initWithUTF8String:str];
-            inputStringForManager = [inputStringForManager stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-            NSLog(@"The manager is %@.", inputStringForManager);
+            restaurantKitchen.delegate = Jane;
+            Jane.delegate = deliveryService;
             
             Pizza *pizza;
             if ([keyword isEqualToString:@"pepperoni"]) {
                 pizza = [Pizza largePepperoni];
-            }
-            else {
+            } else if ([keyword isEqualToString:@"record"]) {
+                NSString *pizzaRecord = [deliveryService.pizzaRecord componentsJoinedByString:@"; "];
+                NSLog(@"Pizza Record: %@", [NSString stringWithFormat:@"%@", pizzaRecord]);
+                continue;
+            } else {
                 // And then send some message to the kitchen...
                 PizzaSize size = [Pizza sizeFromString:keyword];
                 NSArray *toppings = [commandWords subarrayWithRange:NSMakeRange(1, commandWords.count - 1)];
                 
-                if ([inputStringForManager isEqualToString:@"Nick"]) {
-                    Nick = [ManagerHatingAnchovies new];
-                    restaurantKitchen.delegate = Nick;
-                    pizza = [restaurantKitchen makePizzaWithSize:size toppings:toppings];
-                } else if ([inputStringForManager isEqualToString:@"Bob"]) {
-                    Bob = [ManagerBeingCheery new];
-                    restaurantKitchen.delegate = Bob;
-                    pizza = [restaurantKitchen makePizzaWithSize:size toppings:toppings];
-                } else {
-                    pizza = [[Pizza alloc] initWithSize:size toppings:toppings];
-                }
+                pizza = [restaurantKitchen makePizzaWithSize:size toppings:toppings];
             }
             
             if (pizza) {
                 NSLog(@"Here is a %@.", pizza);
+                deliveryService.delegate = deliveryCar;
             } else {
-                NSLog(@"%@ refused to make this pizza.", inputStringForManager);
+                NSLog(@"There is no pizza.");
             }
         }
     }
